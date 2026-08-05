@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>账号设置 - 管理后台</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-logo">管理后台</div>
+      <nav class="admin-nav">
+        <a href="index.html">数据概览</a>
+        <a href="content.html">内容管理</a>
+        <a href="images.html">图片管理</a>
+        <a href="competitions.html">赛事管理</a>
+        <a href="members.html">队员管理</a>
+        <a href="recruits.html">招新管理</a>
+        <a href="sponsors.html">赞助商管理</a>
+        <a href="messages.html">留言管理</a>
+        <a href="settings.html" class="active">账号设置</a>
+      </nav>
+      <div class="admin-footer">
+        <a href="#" onclick="logout()">退出登录</a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <h1>账号设置</h1>
+        <div class="admin-user">管理员</div>
+      </header>
+      <div class="admin-content">
+        <!-- Logo 管理 -->
+        <div style="max-width:520px; background:#fff; border-radius:12px; padding:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom:24px;">
+          <h2 style="font-size:18px; font-weight:500; margin-bottom:24px;">Logo 设置</h2>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
+            <div>
+              <label style="display:block; font-size:13px; color:#666; margin-bottom:8px;">校徽</label>
+              <div id="schoolLogoPreview" style="width:100%; aspect-ratio:1/1; background:#f5f5f5; border-radius:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px dashed #e5e5e5;" onclick="document.getElementById('schoolLogoInput').click()">
+                <span style="color:#999; font-size:13px;">点击上传</span>
+              </div>
+              <input type="file" id="schoolLogoInput" accept="image/*" style="display:none" onchange="uploadLogo('school', event)">
+            </div>
+            <div>
+              <label style="display:block; font-size:13px; color:#666; margin-bottom:8px;">队徽</label>
+              <div id="teamLogoPreview" style="width:100%; aspect-ratio:1/1; background:#f5f5f5; border-radius:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px dashed #e5e5e5;" onclick="document.getElementById('teamLogoInput').click()">
+                <span style="color:#999; font-size:13px;">点击上传</span>
+              </div>
+              <input type="file" id="teamLogoInput" accept="image/*" style="display:none" onchange="uploadLogo('team', event)">
+            </div>
+          </div>
+          
+          <p style="font-size:12px; color:#999;">建议尺寸：200x200px，支持 PNG/JPG 格式</p>
+        </div>
+
+        <!-- 站点名称设置 -->
+        <div style="max-width:520px; background:#fff; border-radius:12px; padding:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom:24px;">
+          <h2 style="font-size:18px; font-weight:500; margin-bottom:24px;">站点名称设置</h2>
+          
+          <div class="form-group">
+            <label>导航栏站点名称</label>
+            <input type="text" class="form-control" id="site-title" placeholder="如：巴哈车队">
+            <p style="font-size:12px; color:#999; margin-top:8px;">显示在导航栏Logo旁边的站点名称</p>
+          </div>
+          
+          <button class="btn btn-primary" onclick="saveSiteTitle()">保存名称</button>
+        </div>
+
+        <!-- 底部信息设置 -->
+        <div style="max-width:520px; background:#fff; border-radius:12px; padding:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom:24px;">
+          <h2 style="font-size:18px; font-weight:500; margin-bottom:24px;">底部信息设置</h2>
+          
+          <div class="form-group">
+            <label>关于车队（底部显示）</label>
+            <textarea class="form-control" id="footer-about" rows="4" placeholder="底部关于车队的介绍文字"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label>版权信息</label>
+            <input type="text" class="form-control" id="footer-copyright" placeholder="如：© 2024 合肥经济技术职业学院 · 巴哈车队">
+          </div>
+          
+          <div class="form-group">
+            <label>联系邮箱</label>
+            <input type="email" class="form-control" id="contact-email" placeholder="contact@example.com">
+          </div>
+          
+          <div class="form-group">
+            <label>联系地址</label>
+            <input type="text" class="form-control" id="contact-address" placeholder="学校地址">
+          </div>
+          
+          <div class="form-group">
+            <label>地址地图链接</label>
+            <input type="text" class="form-control" id="address-url" placeholder="https://surl.amap.com/xxx">
+            <p style="font-size:12px; color:#999; margin-top:8px;">点击地址卡片时打开的地图链接</p>
+          </div>
+          
+          <div class="form-group">
+            <label>联系电话</label>
+            <input type="text" class="form-control" id="contact-phone" placeholder="联系电话">
+          </div>
+          
+          <div class="form-group">
+            <label>微信公众号</label>
+            <input type="text" class="form-control" id="wechat-official" placeholder="微信公众号名称">
+          </div>
+          
+          <button class="btn btn-primary" onclick="saveFooterSettings()">保存设置</button>
+        </div>
+
+        <div style="max-width:520px; background:#fff; border-radius:12px; padding:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+          <h2 style="font-size:18px; font-weight:500; margin-bottom:24px;">修改密码</h2>
+          <form onsubmit="changePassword(event)">
+            <div class="form-group">
+              <label>旧密码</label>
+              <input type="password" class="form-control" id="old-password" required>
+            </div>
+            <div class="form-group">
+              <label>新密码</label>
+              <input type="password" class="form-control" id="new-password" required>
+            </div>
+            <div class="form-group">
+              <label>确认新密码</label>
+              <input type="password" class="form-control" id="confirm-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">确认修改</button>
+          </form>
+
+          <div style="margin-top:40px; border-top:1px solid #f0f0f0; padding-top:24px;">
+            <h2 style="font-size:18px; font-weight:500; margin-bottom:16px;">退出登录</h2>
+            <p style="color:#666; font-size:13px; margin-bottom:16px;">退出当前账号，返回登录页面。</p>
+            <button class="btn btn-danger" onclick="handleLogout()">退出登录</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script src="js/page/settings.js"></script>
+  <script>
+    checkAuth();
+  </script>
+</body>
+</html>

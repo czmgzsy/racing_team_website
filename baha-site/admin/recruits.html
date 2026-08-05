@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>招新管理 - 管理后台</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-logo">管理后台</div>
+      <nav class="admin-nav">
+        <a href="index.html">数据概览</a>
+        <a href="content.html">内容管理</a>
+        <a href="images.html">图片管理</a>
+        <a href="competitions.html">赛事管理</a>
+        <a href="members.html">队员管理</a>
+        <a href="recruits.html" class="active">招新管理</a>
+        <a href="sponsors.html">赞助商管理</a>
+        <a href="messages.html">留言管理</a>
+        <a href="settings.html">账号设置</a>
+      </nav>
+      <div class="admin-footer">
+        <a href="#" onclick="logout()">退出登录</a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <h1>招新管理</h1>
+        <div class="admin-user">管理员</div>
+      </header>
+      <div class="admin-content">
+        <div class="inline-tabs">
+          <button class="inline-tab active" data-tab="posts" onclick="switchTab('posts')">岗位管理</button>
+          <button class="inline-tab" data-tab="applications" onclick="switchTab('applications')">报名记录</button>
+        </div>
+
+        <!-- 岗位管理 -->
+        <div id="tab-posts" class="tab-pane">
+          <div class="page-toolbar">
+            <h2>招新岗位</h2>
+            <button class="btn btn-primary" onclick="openPostModal()">+ 新增岗位</button>
+          </div>
+          <div class="admin-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>岗位名称</th>
+                  <th>部门</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="post-list">
+              </tbody>
+            </table>
+            <div class="empty-state" id="posts-empty" style="display:none;">暂无岗位</div>
+          </div>
+        </div>
+
+        <!-- 报名记录 -->
+        <div id="tab-applications" class="tab-pane" style="display:none;">
+          <div class="page-toolbar">
+            <div class="filter-bar">
+              <label>状态：
+                <select id="filter-app-status" onchange="loadApplications()">
+                  <option value="">全部</option>
+                  <option value="pending">待审核</option>
+                  <option value="reviewed">已审核</option>
+                  <option value="approved">已通过</option>
+                  <option value="rejected">已拒绝</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="admin-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>姓名</th>
+                  <th>电话</th>
+                  <th>邮箱</th>
+                  <th>意向岗位</th>
+                  <th>状态</th>
+                  <th>提交时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="application-list">
+              </tbody>
+            </table>
+            <div class="empty-state" id="apps-empty" style="display:none;">暂无报名记录</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 岗位新增/编辑模态框 -->
+  <div class="modal-overlay" id="post-modal">
+    <div class="modal-dialog" style="width:560px;">
+      <div class="modal-header">
+        <h3 id="post-modal-title">新增岗位</h3>
+        <button class="modal-close" onclick="closePostModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="post-id">
+        <div class="form-group">
+          <label>岗位名称 *</label>
+          <input type="text" class="form-control" id="post-title" placeholder="如：底盘设计工程师">
+        </div>
+        <div class="form-group">
+          <label>部门</label>
+          <input type="text" class="form-control" id="post-department" placeholder="如：底盘组">
+        </div>
+        <div class="form-group">
+          <label>岗位描述</label>
+          <textarea class="form-control" id="post-description" rows="3" placeholder="岗位介绍"></textarea>
+        </div>
+        <div class="form-group">
+          <label>岗位要求（每行一条）</label>
+          <textarea class="form-control" id="post-requirements" rows="5" placeholder="1. 机械工程相关专业&#10;2. 熟悉 SolidWorks"></textarea>
+        </div>
+        <div class="form-group">
+          <label>是否开启</label>
+          <select class="form-control" id="post-open">
+            <option value="true">开启招聘</option>
+            <option value="false">关闭招聘</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closePostModal()">取消</button>
+        <button class="btn btn-primary" onclick="savePost()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 报名详情模态框 -->
+  <div class="modal-overlay" id="application-modal">
+    <div class="modal-dialog" style="width:520px;">
+      <div class="modal-header">
+        <h3>报名详情</h3>
+        <button class="modal-close" onclick="closeApplicationModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="application-detail">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeApplicationModal()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script src="js/page/recruits.js"></script>
+  <script>
+    checkAuth();
+    loadPosts();
+  </script>
+</body>
+</html>

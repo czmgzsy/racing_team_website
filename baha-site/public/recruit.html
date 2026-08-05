@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>招新 - 合肥经济技术职业学院巴哈车队</title>
+  <meta name="description" content="加入巴哈车队，一起追逐赛车梦想">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ====== 导航栏 ====== */
+    .site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 56px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid transparent;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .site-nav.scrolled {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid hsl(0 0% 90%);
+    }
+    .nav-container {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 100%;
+    }
+    .nav-logo-img {
+      width: 40px;
+      height: 40px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #999;
+    }
+    .nav-logo-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: hsl(0 0% 13%);
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-menu a {
+      display: block;
+      padding: 8px 14px;
+      font-size: 13px;
+      color: hsl(0 0% 45%);
+      border-radius: 980px;
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+    .nav-menu a:hover {
+      color: hsl(0 0% 13%);
+    }
+    .nav-menu a.active {
+      color: hsl(0 0% 13%);
+      font-weight: 500;
+    }
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      color: hsl(0 0% 13%);
+    }
+    .nav-menu-mobile {
+      display: none;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      right: 0;
+      background-color: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid hsl(0 0% 90%);
+      padding: 16px 24px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .nav-menu-mobile.open {
+      max-height: 500px;
+    }
+    .nav-menu-mobile a {
+      display: block;
+      padding: 14px 0;
+      font-size: 16px;
+      color: hsl(0 0% 13%);
+      border-bottom: 1px solid hsl(0 0% 96%);
+    }
+    .nav-menu-mobile a.active {
+      color: hsl(211 60% 48%);
+    }
+    @media (max-width: 768px) {
+      .nav-menu { display: none; }
+      .nav-toggle { display: block; }
+      .nav-menu-mobile { display: block; }
+      .nav-logo-text { display: none; }
+    }
+
+    /* ====== Hero ====== */
+    .page-hero {
+      padding: 160px 0 100px;
+      text-align: center;
+      background-color: #fff;
+    }
+    .page-hero h1 {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+    .page-hero p {
+      font-size: 21px;
+      color: hsl(0 0% 45%);
+      margin-bottom: 48px;
+    }
+    .hero-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      background-color: #f0f0f0;
+      background-size: cover;
+      background-position: center;
+    }
+    @media (max-width: 768px) {
+      .page-hero { padding: 120px 0 60px; }
+      .page-hero h1 { font-size: 36px; }
+      .page-hero p { font-size: 18px; }
+    }
+
+    /* ====== 加入理由 ====== */
+    .reasons-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .reason-card {
+      padding: 40px 28px;
+      background: #fff;
+      border-radius: 16px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .reason-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+    .reason-icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 20px;
+      background-color: hsl(211 60% 48% / 0.1);
+      color: hsl(211 60% 48%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .reason-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .reason-card p {
+      font-size: 14px;
+      color: hsl(0 0% 45%);
+      line-height: 1.6;
+    }
+    @media (max-width: 768px) {
+      .reasons-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* ====== 招聘岗位 ====== */
+    .positions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .position-card {
+      padding: 32px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid hsl(0 0% 90%);
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    .position-card:hover {
+      border-color: hsl(211 60% 48%);
+      transform: translateY(-2px);
+    }
+    .position-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .position-card .desc {
+      font-size: 14px;
+      color: hsl(0 0% 45%);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .position-card h4 {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: hsl(0 0% 13%);
+    }
+    .position-card ul {
+      list-style: none;
+      margin-bottom: 16px;
+    }
+    .position-card li {
+      font-size: 13px;
+      color: hsl(0 0% 45%);
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+    .position-card li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: hsl(211 60% 48%);
+    }
+    @media (max-width: 768px) {
+      .positions-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* ====== 报名流程 ====== */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+    .step-item {
+      text-align: center;
+      padding: 32px 20px;
+      background: #fff;
+      border-radius: 16px;
+    }
+    .step-number {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      background-color: hsl(211 60% 48%);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .step-item h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .step-item p {
+      font-size: 13px;
+      color: hsl(0 0% 45%);
+      line-height: 1.5;
+    }
+    @media (max-width: 768px) {
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    /* ====== 图片展示 ====== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .gallery-item {
+      border-radius: 16px;
+      overflow: hidden;
+      background-color: #f0f0f0;
+      background-size: cover;
+      background-position: center;
+      aspect-ratio: 4 / 3;
+      transition: transform 0.3s ease;
+    }
+    .gallery-item:hover {
+      transform: scale(1.02);
+    }
+    @media (max-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    /* ====== CTA ====== */
+    .cta-section {
+      text-align: center;
+      padding: 100px 0;
+    }
+    .cta-section h2 {
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      font-size: 19px;
+      color: hsl(0 0% 45%);
+      margin-bottom: 32px;
+    }
+    @media (max-width: 768px) {
+      .cta-section { padding: 60px 0; }
+      .cta-section h2 { font-size: 28px; }
+      .cta-section p { font-size: 16px; }
+    }
+
+    /* ====== 页脚 ====== */
+    .site-footer {
+      background-color: hsl(0 0% 96%);
+      padding: 48px 0 32px;
+      font-size: 12px;
+      color: hsl(0 0% 45%);
+      border-top: 1px solid hsl(0 0% 90%);
+    }
+    .footer-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 32px;
+    }
+    .footer-col h4 {
+      font-size: 12px;
+      color: hsl(0 0% 13%);
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col li {
+      margin-bottom: 10px;
+    }
+    .footer-col a:hover {
+      color: hsl(211 60% 48%);
+    }
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid hsl(0 0% 90%);
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <nav class="site-nav nav-blur">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-img">校徽</div>
+        <div class="nav-logo-img">车队</div>
+        <span class="nav-logo-text">巴哈车队</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="about.html">车队介绍</a></li>
+        <li><a href="racecar.html">赛车展示</a></li>
+        <li><a href="competition.html">赛事历程</a></li>
+        <li><a href="member.html">队员风采</a></li>
+        <li><a href="sponsor.html">赞助商</a></li>
+        <li><a href="recruit.html">招新</a></li>
+        <li><a href="contact.html">联系我们</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="菜单" aria-expanded="false">
+        ≡
+      </button>
+    </div>
+    <div class="nav-menu-mobile nav-blur">
+      <a href="index.html">首页</a>
+      <a href="about.html">车队介绍</a>
+      <a href="racecar.html">赛车展示</a>
+      <a href="competition.html">赛事历程</a>
+      <a href="member.html">队员风采</a>
+      <a href="sponsor.html">赞助商</a>
+      <a href="recruit.html">招新</a>
+      <a href="contact.html">联系我们</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="fade-up">
+        <h1 data-content-key="recruitTitle">加入我们</h1>
+        <p data-content-key="recruitSubtitle">一起追逐赛车梦想</p>
+      </div>
+      <div class="hero-image fade-up" data-image-key="recruit.banner" style="transition-delay: 0.1s;"></div>
+    </div>
+  </section>
+
+  <!-- 为什么加入 -->
+  <section class="section bg-gray">
+    <div class="container">
+      <h2 class="section-title fade-up" data-content-key="whyTitle">为什么加入我们</h2>
+      <p class="section-subtitle fade-up" data-content-key="whySubtitle">这里不只是赛车，更是成长的舞台</p>
+      <div class="reasons-grid">
+        <div class="reason-card fade-up" style="transition-delay: 0.05s;">
+          <div class="reason-icon">🔧</div>
+          <h3>实践机会</h3>
+          <p>亲手参与赛车的设计、制造、调试全过程，将课堂知识转化为实际能力。</p>
+        </div>
+        <div class="reason-card fade-up" style="transition-delay: 0.1s;">
+          <div class="reason-icon">🏁</div>
+          <h3>赛事经历</h3>
+          <p>代表学校参加全国巴哈大赛，与全国各地的强队同场竞技，开阔眼界。</p>
+        </div>
+        <div class="reason-card fade-up" style="transition-delay: 0.15s;">
+          <div class="reason-icon">👥</div>
+          <h3>团队友谊</h3>
+          <p>结识一群志同道合的朋友，在并肩作战中收获珍贵的友谊和团队精神。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 招聘岗位 -->
+  <section class="section bg-white">
+    <div class="container">
+      <h2 class="section-title fade-up" data-content-key="positionsTitle">招聘岗位</h2>
+      <p class="section-subtitle fade-up" data-content-key="positionsSubtitle">总有一个位置适合你</p>
+      <div class="positions-grid">
+        <div class="position-card fade-up" style="transition-delay: 0.05s;">
+          <h3>车架组</h3>
+          <p class="desc">负责赛车车架的设计与制造</p>
+          <h4>我们希望你：</h4>
+          <ul>
+            <li>对机械设计有兴趣</li>
+            <li>动手能力强，不怕脏不怕累</li>
+            <li>有CAD基础优先</li>
+          </ul>
+        </div>
+        <div class="position-card fade-up" style="transition-delay: 0.1s;">
+          <h3>动力组</h3>
+          <p class="desc">负责发动机调校与传动系统</p>
+          <h4>我们希望你：</h4>
+          <ul>
+            <li>对发动机感兴趣</li>
+            <li>细心严谨，有耐心</li>
+            <li>有相关知识基础优先</li>
+          </ul>
+        </div>
+        <div class="position-card fade-up" style="transition-delay: 0.15s;">
+          <h3>悬挂组</h3>
+          <p class="desc">负责悬挂系统设计与调校</p>
+          <h4>我们希望你：</h4>
+          <ul>
+            <li>对汽车底盘感兴趣</li>
+            <li>善于思考，喜欢钻研</li>
+            <li>有力学基础优先</li>
+          </ul>
+        </div>
+        <div class="position-card fade-up" style="transition-delay: 0.2s;">
+          <h3>营销组</h3>
+          <p class="desc">负责宣传、赞助与成本分析</p>
+          <h4>我们希望你：</h4>
+          <ul>
+            <li>沟通能力强，性格开朗</li>
+            <li>会做PPT/海报优先</li>
+            <li>有新媒体运营经验优先</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 报名流程 -->
+  <section class="section bg-gray">
+    <div class="container">
+      <h2 class="section-title fade-up" data-content-key="stepsTitle">报名流程</h2>
+      <p class="section-subtitle fade-up" data-content-key="stepsSubtitle">简单四步，开启你的赛车之旅</p>
+      <div class="steps">
+        <div class="step-item fade-up" style="transition-delay: 0.05s;">
+          <div class="step-number">1</div>
+          <h3>填写报名表</h3>
+          <p>在线填写报名信息</p>
+        </div>
+        <div class="step-item fade-up" style="transition-delay: 0.1s;">
+          <div class="step-number">2</div>
+          <h3>参加面试</h3>
+          <p>简单的交流和了解</p>
+        </div>
+        <div class="step-item fade-up" style="transition-delay: 0.15s;">
+          <div class="step-number">3</div>
+          <h3>试用期</h3>
+          <p>体验车队日常工作</p>
+        </div>
+        <div class="step-item fade-up" style="transition-delay: 0.2s;">
+          <div class="step-number">4</div>
+          <h3>正式加入</h3>
+          <p>成为车队一员</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 图片展示 -->
+  <section class="section bg-white">
+    <div class="container">
+      <h2 class="section-title fade-up" data-content-key="dailyTitle">车队日常</h2>
+      <p class="section-subtitle fade-up" data-content-key="dailySubtitle">来看看我们的生活</p>
+      <div class="gallery-grid fade-up">
+        <div class="gallery-item" data-image-key="recruit.gallery1"></div>
+        <div class="gallery-item" data-image-key="recruit.gallery2"></div>
+        <div class="gallery-item" data-image-key="recruit.gallery3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section bg-gray">
+    <div class="container">
+      <div class="fade-up">
+        <h2 data-content-key="ctaTitle">准备好了吗？</h2>
+        <p data-content-key="ctaSubtitle">填写报名表，加入我们的大家庭</p>
+        <a href="contact.html" class="btn btn-primary">立即报名</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h4>关于车队</h4>
+          <p>合肥经济技术职业学院巴哈车队，致力于培养学生工程实践能力，在赛车运动中追求卓越。</p>
+        </div>
+        <div class="footer-col">
+          <h4>探索</h4>
+          <ul>
+            <li><a href="about.html">车队介绍</a></li>
+            <li><a href="racecar.html">赛车展示</a></li>
+            <li><a href="competition.html">赛事历程</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>参与</h4>
+          <ul>
+            <li><a href="recruit.html">招新报名</a></li>
+            <li><a href="sponsor.html">赞助合作</a></li>
+            <li><a href="contact.html">联系我们</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>关注我们</h4>
+          <p>社交媒体链接</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © <span id="year"></span> 合肥经济技术职业学院 · 巴哈车队
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

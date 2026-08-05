@@ -1,0 +1,437 @@
+/*
+  巴哈车队官网 - 全局样式
+  设计风格：苹果官网风格 - 极简留白、低饱和度、纤细字体
+*/
+
+/* ====== 基础重置 ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "PingFang SC", "Helvetica Neue", "Segoe UI", "Noto Sans SC",
+    "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: hsl(0 0% 13%);
+  background-color: hsl(0 0% 98%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ====== 滚动淡入动画 ====== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ====== 容器 ====== */
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.container-wide {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ====== 导航栏毛玻璃效果 ====== */
+.nav-blur {
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* ====== 导航栏尺寸优化 ====== */
+.site-nav {
+  height: 64px !important;
+}
+.nav-logo {
+  gap: 8px !important;
+}
+.nav-logo-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.nav-logo-img-real {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+/* 校徽：长方形完整显示 */
+.nav-logo-img.school-logo {
+  height: 44px;
+  width: auto;
+}
+.nav-logo-img.school-logo .nav-logo-img-real {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+/* 队徽：拉长完整显示 */
+.nav-logo-img.team-logo {
+  height: 48px;
+  width: auto;
+}
+.nav-logo-img.team-logo .nav-logo-img-real {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.nav-logo-text {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+.nav-menu a {
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  white-space: nowrap !important;
+}
+.nav-menu-mobile {
+  top: 64px !important;
+}
+
+/* 大屏幕更大 */
+@media (min-width: 1200px) {
+  .site-nav {
+    height: 72px !important;
+  }
+  .nav-logo-img.school-logo {
+    height: 50px;
+  }
+  .nav-logo-img.school-logo .nav-logo-img-real {
+    height: 50px;
+  }
+  .nav-logo-img.team-logo {
+    height: 56px;
+  }
+  .nav-logo-img.team-logo .nav-logo-img-real {
+    height: 56px;
+  }
+  .nav-logo-text {
+    font-size: 20px !important;
+    white-space: nowrap !important;
+  }
+  .nav-menu a {
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    white-space: nowrap !important;
+  }
+  .nav-menu-mobile {
+    top: 72px !important;
+  }
+  .nav-container {
+    max-width: 1200px !important;
+  }
+}
+
+/* 小屏幕适当缩小 */
+@media (max-width: 768px) {
+  .site-nav {
+    height: 56px !important;
+  }
+  .nav-logo-img.school-logo {
+    height: 36px;
+  }
+  .nav-logo-img.school-logo .nav-logo-img-real {
+    height: 36px;
+  }
+  .nav-logo-img.team-logo {
+    height: 40px;
+  }
+  .nav-logo-img.team-logo .nav-logo-img-real {
+    height: 40px;
+  }
+  .nav-logo-text {
+    font-size: 16px !important;
+  }
+  .nav-menu-mobile {
+    top: 56px !important;
+  }
+}
+
+/* ====== 按钮 ====== */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 400;
+  border-radius: 980px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: hsl(211 60% 48%);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: hsl(211 60% 42%);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: hsl(211 60% 48%);
+  border: 1px solid hsl(211 60% 48%);
+}
+
+.btn-secondary:hover {
+  background-color: hsl(211 60% 48%);
+  color: #ffffff;
+}
+
+.btn-link {
+  color: hsl(211 60% 48%);
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.btn-link:hover {
+  opacity: 0.7;
+}
+
+.btn-link::after {
+  content: '›';
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* ====== 卡片 ====== */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* ====== 图片占位 ====== */
+.img-placeholder {
+  width: 100%;
+  background-color: #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 14px;
+  aspect-ratio: 16 / 9;
+}
+
+/* ====== Section 通用 ====== */
+.section {
+  padding: 120px 0;
+}
+
+.section-sm {
+  padding: 80px 0;
+}
+
+.section-title {
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  text-align: center;
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+.section-subtitle {
+  font-size: 21px;
+  color: hsl(0 0% 45%);
+  text-align: center;
+  margin-bottom: 64px;
+  font-weight: 400;
+}
+
+/* ====== Hero 通用 ====== */
+.hero {
+  padding: 160px 0 100px;
+  text-align: center;
+  background-color: #fff;
+}
+
+.hero h1 {
+  font-size: 64px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  line-height: 1.05;
+}
+
+.hero p {
+  font-size: 24px;
+  color: hsl(0 0% 45%);
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+
+.hero-image {
+  margin-top: 60px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  background-color: #f0f0f0;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* ====== 图片网格 ====== */
+.image-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.image-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.image-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.image-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.image-grid-item {
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background-color: #f0f0f0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+
+.image-grid-item:hover {
+  transform: scale(1.01);
+}
+
+.image-grid-item.tall {
+  aspect-ratio: 3 / 4;
+}
+
+.image-grid-item.wide {
+  grid-column: span 2;
+  aspect-ratio: 16 / 9;
+}
+
+/* ====== 工具类 ====== */
+.text-center {
+  text-align: center;
+}
+
+.mt-8 { margin-top: 32px; }
+.mt-12 { margin-top: 48px; }
+.mt-16 { margin-top: 64px; }
+.mt-20 { margin-top: 80px; }
+
+.mb-8 { margin-bottom: 32px; }
+.mb-12 { margin-bottom: 48px; }
+.mb-16 { margin-bottom: 64px; }
+.mb-20 { margin-bottom: 80px; }
+
+.py-16 { padding-top: 64px; padding-bottom: 64px; }
+.py-20 { padding-top: 80px; padding-bottom: 80px; }
+.py-24 { padding-top: 96px; padding-bottom: 96px; }
+
+.bg-white { background-color: #fff; }
+.bg-gray { background-color: hsl(0 0% 96%); }
+
+/* ====== 响应式 ====== */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .container-wide {
+    padding: 0 16px;
+  }
+
+  .section {
+    padding: 80px 0;
+  }
+
+  .section-sm {
+    padding: 56px 0;
+  }
+
+  .section-title {
+    font-size: 32px;
+  }
+
+  .section-subtitle {
+    font-size: 17px;
+    margin-bottom: 40px;
+  }
+
+  .hero {
+    padding: 120px 0 60px;
+  }
+
+  .hero h1 {
+    font-size: 40px;
+  }
+
+  .hero p {
+    font-size: 19px;
+  }
+
+  .image-grid-2,
+  .image-grid-3,
+  .image-grid-4 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .image-grid-item.wide {
+    grid-column: span 1;
+  }
+
+  .py-24 {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}

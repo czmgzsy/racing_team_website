@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>内容管理 - 管理后台</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    .page-images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .page-image-card {
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #fff;
+    }
+    .page-image-card:hover {
+      border-color: #4a90d9;
+      box-shadow: 0 2px 8px rgba(74, 144, 217, 0.15);
+      transform: translateY(-2px);
+    }
+    .page-image-preview {
+      width: 100%;
+      height: 100px;
+      background-size: cover;
+      background-position: center;
+      background-color: #f5f5f5;
+    }
+    .page-image-info {
+      padding: 8px 10px;
+    }
+    .page-image-position {
+      font-size: 12px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .page-image-title {
+      font-size: 11px;
+      color: #999;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .btn-outline {
+      padding: 8px 20px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      color: #666;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    .btn-outline:hover {
+      border-color: #4a90d9;
+      color: #4a90d9;
+    }
+    
+    /* 图片编辑模态框 */
+    .image-edit-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .image-edit-modal.show {
+      display: flex;
+    }
+    .image-edit-modal-content {
+      background: #fff;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .image-edit-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .image-edit-modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+    .image-edit-modal-close {
+      cursor: pointer;
+      font-size: 24px;
+      color: #999;
+      line-height: 1;
+    }
+    .image-edit-modal-close:hover {
+      color: #333;
+    }
+    .image-edit-preview {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background-size: cover;
+      background-position: center;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .image-edit-form .form-group {
+      margin-bottom: 16px;
+    }
+    .image-edit-form label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #333;
+      font-weight: 500;
+    }
+    .image-edit-form input,
+    .image-edit-form textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .image-edit-form textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .image-edit-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .image-edit-actions .btn {
+      flex: 1;
+    }
+    .btn-danger {
+      background: #ff4d4f;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    .btn-danger:hover {
+      background: #ff7875;
+    }
+    
+    /* 板块样式优化 */
+    .section-block {
+      background: #fafafa;
+      border: 1px solid #f0f0f0;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .section-block h4 {
+      margin-top: 0 !important;
+      margin-bottom: 16px !important;
+      color: #333 !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .section-images-wrapper {
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 20px !important;
+    }
+    .section-block .form-group {
+      margin-bottom: 16px;
+    }
+    .section-block .form-group:last-child {
+      margin-bottom: 0;
+    }
+    .section-images-title {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 12px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .upload-btn {
+      padding: 6px 12px;
+      background: #4a90d9;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .upload-btn:hover {
+      background: #357abd;
+    }
+    .upload-btn-small {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+    .image-upload-card {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #fafafa;
+      color: #999;
+    }
+    .image-upload-card:hover {
+      border-color: #4a90d9;
+      color: #4a90d9;
+      background: #f0f7ff;
+    }
+    .image-upload-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .image-upload-text {
+      font-size: 12px;
+    }
+    .replace-image-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 8px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .page-image-card:hover .replace-image-btn {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-logo">管理后台</div>
+      <nav class="admin-nav">
+        <a href="index.html">数据概览</a>
+        <a href="content.html" class="active">内容管理</a>
+        <a href="images.html">图片管理</a>
+        <a href="competitions.html">赛事管理</a>
+        <a href="members.html">队员管理</a>
+        <a href="recruits.html">招新管理</a>
+        <a href="sponsors.html">赞助商管理</a>
+        <a href="messages.html">留言管理</a>
+        <a href="settings.html">账号设置</a>
+      </nav>
+      <div class="admin-footer">
+        <a href="#" onclick="logout()">退出登录</a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <h1>内容管理</h1>
+        <div class="admin-user">管理员</div>
+      </header>
+      <div class="admin-content">
+        <div class="tabs-layout">
+          <div class="tabs-nav">
+            <button class="tabs-nav-item active" data-page="home">首页</button>
+            <button class="tabs-nav-item" data-page="about">车队介绍</button>
+            <button class="tabs-nav-item" data-page="racecar">赛车展示</button>
+            <button class="tabs-nav-item" data-page="competitions">赛事历程</button>
+            <button class="tabs-nav-item" data-page="members">队员风采</button>
+            <button class="tabs-nav-item" data-page="sponsors">赞助商</button>
+            <button class="tabs-nav-item" data-page="recruit">招新</button>
+            <button class="tabs-nav-item" data-page="contact">联系我们</button>
+          </div>
+          <div class="tabs-content">
+            <!-- 首页 -->
+            <div class="tabs-pane active" data-pane="home">
+              <h3>首页内容</h3>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">Hero 区域</h4>
+              <div class="form-group">
+                <label>主标题</label>
+                <input type="text" class="form-control" name="heroTitle" placeholder="首页大标题">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="heroSubtitle" placeholder="副标题文字">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">车队亮点</h4>
+              <div class="form-group">
+                <label>板块标题</label>
+                <input type="text" class="form-control" name="featuresTitle" placeholder="如：车队亮点">
+              </div>
+              <div class="form-group">
+                <label>板块副标题</label>
+                <input type="text" class="form-control" name="featuresSubtitle" placeholder="如：工程实践 · 团队协作 · 创新精神">
+              </div>
+              <div class="form-group">
+                <label>特色1 - 标题</label>
+                <input type="text" class="form-control" name="feature1Title" placeholder="特色标题">
+              </div>
+              <div class="form-group">
+                <label>特色1 - 描述</label>
+                <textarea class="form-control" name="feature1Desc" rows="2" placeholder="特色描述"></textarea>
+              </div>
+              <div class="form-group">
+                <label>特色2 - 标题</label>
+                <input type="text" class="form-control" name="feature2Title" placeholder="特色标题">
+              </div>
+              <div class="form-group">
+                <label>特色2 - 描述</label>
+                <textarea class="form-control" name="feature2Desc" rows="2" placeholder="特色描述"></textarea>
+              </div>
+              <div class="form-group">
+                <label>特色3 - 标题</label>
+                <input type="text" class="form-control" name="feature3Title" placeholder="特色标题">
+              </div>
+              <div class="form-group">
+                <label>特色3 - 描述</label>
+                <textarea class="form-control" name="feature3Desc" rows="2" placeholder="特色描述"></textarea>
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">精彩瞬间</h4>
+              <div class="form-group">
+                <label>板块标题</label>
+                <input type="text" class="form-control" name="galleryTitle" placeholder="如：精彩瞬间">
+              </div>
+              <div class="form-group">
+                <label>板块副标题</label>
+                <input type="text" class="form-control" name="gallerySubtitle" placeholder="如：记录每一个值得铭记的时刻">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">快速入口</h4>
+              <div class="form-group">
+                <label>板块标题</label>
+                <input type="text" class="form-control" name="quickTitle" placeholder="如：探索更多">
+              </div>
+              <div class="form-group">
+                <label>板块副标题</label>
+                <input type="text" class="form-control" name="quickSubtitle" placeholder="如：发现车队的每一面">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                  <label>入口1 - 标题</label>
+                  <input type="text" class="form-control" name="quick1Title" placeholder="标题">
+                </div>
+                <div class="form-group">
+                  <label>入口1 - 描述</label>
+                  <input type="text" class="form-control" name="quick1Desc" placeholder="描述">
+                </div>
+                <div class="form-group">
+                  <label>入口2 - 标题</label>
+                  <input type="text" class="form-control" name="quick2Title" placeholder="标题">
+                </div>
+                <div class="form-group">
+                  <label>入口2 - 描述</label>
+                  <input type="text" class="form-control" name="quick2Desc" placeholder="描述">
+                </div>
+                <div class="form-group">
+                  <label>入口3 - 标题</label>
+                  <input type="text" class="form-control" name="quick3Title" placeholder="标题">
+                </div>
+                <div class="form-group">
+                  <label>入口3 - 描述</label>
+                  <input type="text" class="form-control" name="quick3Desc" placeholder="描述">
+                </div>
+                <div class="form-group">
+                  <label>入口4 - 标题</label>
+                  <input type="text" class="form-control" name="quick4Title" placeholder="标题">
+                </div>
+                <div class="form-group">
+                  <label>入口4 - 描述</label>
+                  <input type="text" class="form-control" name="quick4Desc" placeholder="描述">
+                </div>
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">CTA 区域</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="ctaTitle" placeholder="如：准备好加入我们了吗？">
+              </div>
+              <div class="form-group">
+                <label>描述</label>
+                <textarea class="form-control" name="ctaSubtitle" rows="2" placeholder="描述文字"></textarea>
+              </div>
+              
+              <button class="btn btn-primary" onclick="savePage('home')">保存内容</button>
+            </div>
+
+            <!-- 车队介绍 -->
+            <div class="tabs-pane" data-pane="about">
+              <h3>车队介绍</h3>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">页面头部</h4>
+              <div class="form-group">
+                <label>页面标题</label>
+                <input type="text" class="form-control" name="aboutTitle" placeholder="如：关于我们">
+              </div>
+              <div class="form-group">
+                <label>页面副标题</label>
+                <input type="text" class="form-control" name="aboutSubtitle" placeholder="副标题文字">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">我们的故事</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="storyTitle" placeholder="如：我们的故事">
+              </div>
+              <div class="form-group">
+                <label>第一段</label>
+                <textarea class="form-control" name="storyP1" rows="3" placeholder="第一段内容"></textarea>
+              </div>
+              <div class="form-group">
+                <label>第二段</label>
+                <textarea class="form-control" name="storyP2" rows="3" placeholder="第二段内容"></textarea>
+              </div>
+              <div class="form-group">
+                <label>第三段</label>
+                <textarea class="form-control" name="storyP3" rows="3" placeholder="第三段内容"></textarea>
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">团队协作</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="teamTitle" placeholder="如：团队协作">
+              </div>
+              <div class="form-group">
+                <label>第一段</label>
+                <textarea class="form-control" name="teamP1" rows="3" placeholder="第一段内容"></textarea>
+              </div>
+              <div class="form-group">
+                <label>第二段</label>
+                <textarea class="form-control" name="teamP2" rows="3" placeholder="第二段内容"></textarea>
+              </div>
+              <div class="form-group">
+                <label>第三段</label>
+                <textarea class="form-control" name="teamP3" rows="3" placeholder="第三段内容"></textarea>
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">专业设施</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="facilityTitle" placeholder="如：专业设施">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="facilitySubtitle" placeholder="副标题文字">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">我们的理念</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="valueTitle" placeholder="如：我们的理念">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="valueSubtitle" placeholder="副标题文字">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                  <label>理念1 - 标题</label>
+                  <input type="text" class="form-control" name="value1Title" placeholder="标题">
+                </div>
+                <div class="form-group">
+                  <label>理念1 - 描述</label>
+                  <input type="text" class="form-control" name="value1Desc" placeholder="描述">
+                </div>
+                <div class="form-group">
+                  <label>理念2 - 标题</label>
+                  <input type="text" class="form-control" name="value2Title" placeholder="标题">
+                </div>
+                <div class="form-group">
+                  <label>理念2 - 描述</label>
+                  <input type="text" class="form-control" name="value2Desc" placeholder="描述">
+                </div>
+                <div class="form-group">
+                  <label>理念3 - 标题</label>
+                  <input type="text" class="form-control" name="value3Title" placeholder="标题">
+                </div>
+                <div class="form-group">
+                  <label>理念3 - 描述</label>
+                  <input type="text" class="form-control" name="value3Desc" placeholder="描述">
+                </div>
+              </div>
+              
+              <button class="btn btn-primary" onclick="savePage('about')">保存内容</button>
+            </div>
+
+            <!-- 赛车展示 -->
+            <div class="tabs-pane" data-pane="racecar">
+              <h3>赛车展示</h3>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">页面头部</h4>
+              <div class="form-group">
+                <label>页面标题</label>
+                <input type="text" class="form-control" name="racecarTitle" placeholder="如：赛车展示">
+              </div>
+              <div class="form-group">
+                <label>页面副标题</label>
+                <input type="text" class="form-control" name="racecarSubtitle" placeholder="如：精密制造，极限性能">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">核心参数</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="specsTitle" placeholder="如：核心参数">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="specsSubtitle" placeholder="如：每一个数字，都是汗水的结晶">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                  <label>参数1 - 数值</label>
+                  <input type="text" class="form-control" name="spec1Value" placeholder="如：250+">
+                </div>
+                <div class="form-group">
+                  <label>参数1 - 标签</label>
+                  <input type="text" class="form-control" name="spec1Label" placeholder="如：整车零件数">
+                </div>
+                <div class="form-group">
+                  <label>参数2 - 数值</label>
+                  <input type="text" class="form-control" name="spec2Value" placeholder="如：180kg">
+                </div>
+                <div class="form-group">
+                  <label>参数2 - 标签</label>
+                  <input type="text" class="form-control" name="spec2Label" placeholder="如：整车重量">
+                </div>
+                <div class="form-group">
+                  <label>参数3 - 数值</label>
+                  <input type="text" class="form-control" name="spec3Value" placeholder="如：100+">
+                </div>
+                <div class="form-group">
+                  <label>参数3 - 标签</label>
+                  <input type="text" class="form-control" name="spec3Label" placeholder="如：马力输出">
+                </div>
+                <div class="form-group">
+                  <label>参数4 - 数值</label>
+                  <input type="text" class="form-control" name="spec4Value" placeholder="如：6+">
+                </div>
+                <div class="form-group">
+                  <label>参数4 - 标签</label>
+                  <input type="text" class="form-control" name="spec4Label" placeholder="如：月研发周期">
+                </div>
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">图片展示</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="galleryTitle" placeholder="如：全方位展示">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="gallerySubtitle" placeholder="如：每一个角度，都值得细看">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">动力系统</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="engineTitle" placeholder="如：强劲心脏">
+              </div>
+              <div class="form-group">
+                <label>描述</label>
+                <textarea class="form-control" name="engineDesc" rows="2" placeholder="描述文字"></textarea>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                  <label>特点1</label>
+                  <input type="text" class="form-control" name="enginePoint1" placeholder="如：高性能发动机">
+                </div>
+                <div class="form-group">
+                  <label>特点2</label>
+                  <input type="text" class="form-control" name="enginePoint2" placeholder="如：优化传动系统">
+                </div>
+                <div class="form-group">
+                  <label>特点3</label>
+                  <input type="text" class="form-control" name="enginePoint3" placeholder="如：定制排气系统">
+                </div>
+                <div class="form-group">
+                  <label>特点4</label>
+                  <input type="text" class="form-control" name="enginePoint4" placeholder="如：高效散热设计">
+                </div>
+              </div>
+              
+              <button class="btn btn-primary" onclick="savePage('racecar')">保存内容</button>
+            </div>
+
+            <!-- 赛事历程 -->
+            <div class="tabs-pane" data-pane="competitions">
+              <h3>赛事历程</h3>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">页面头部</h4>
+              <div class="form-group">
+                <label>页面标题</label>
+                <input type="text" class="form-control" name="competitionTitle" placeholder="如：赛事历程">
+              </div>
+              <div class="form-group">
+                <label>页面副标题</label>
+                <input type="text" class="form-control" name="competitionSubtitle" placeholder="如：每一步，都算数">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">荣耀数据</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="statsTitle" placeholder="如：荣耀数据">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="statsSubtitle" placeholder="如：数字背后，是无数个日夜的付出">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                  <label>数据1 - 数值</label>
+                  <input type="text" class="form-control" name="stat1Value" placeholder="如：5+">
+                </div>
+                <div class="form-group">
+                  <label>数据1 - 标签</label>
+                  <input type="text" class="form-control" name="stat1Label" placeholder="如：年参赛历史">
+                </div>
+                <div class="form-group">
+                  <label>数据2 - 数值</label>
+                  <input type="text" class="form-control" name="stat2Value" placeholder="如：10+">
+                </div>
+                <div class="form-group">
+                  <label>数据2 - 标签</label>
+                  <input type="text" class="form-control" name="stat2Label" placeholder="如：场赛事经历">
+                </div>
+                <div class="form-group">
+                  <label>数据3 - 数值</label>
+                  <input type="text" class="form-control" name="stat3Value" placeholder="如：3">
+                </div>
+                <div class="form-group">
+                  <label>数据3 - 标签</label>
+                  <input type="text" class="form-control" name="stat3Label" placeholder="如：项赛事奖项">
+                </div>
+                <div class="form-group">
+                  <label>数据4 - 数值</label>
+                  <input type="text" class="form-control" name="stat4Value" placeholder="如：50+">
+                </div>
+                <div class="form-group">
+                  <label>数据4 - 标签</label>
+                  <input type="text" class="form-control" name="stat4Label" placeholder="如：参赛队员">
+                </div>
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">成长足迹</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="timelineTitle" placeholder="如：成长足迹">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="timelineSubtitle" placeholder="如：一路走来，我们从未停下脚步">
+              </div>
+              <p class="form-hint">时间线具体内容请在「图片管理」中编辑对应图片的标题和描述。</p>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">未来展望</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="futureTitle" placeholder="如：未来可期">
+              </div>
+              <div class="form-group">
+                <label>描述</label>
+                <textarea class="form-control" name="futureDesc" rows="2" placeholder="描述文字"></textarea>
+              </div>
+              
+              <p class="form-hint">具体赛事记录请在「赛事管理」页面维护。</p>
+              <button class="btn btn-primary" onclick="savePage('competitions')">保存内容</button>
+            </div>
+
+            <!-- 队员风采 -->
+            <div class="tabs-pane" data-pane="members">
+              <h3>队员风采</h3>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">页面头部</h4>
+              <div class="form-group">
+                <label>页面标题</label>
+                <input type="text" class="form-control" name="memberTitle" placeholder="如：队员风采">
+              </div>
+              <div class="form-group">
+                <label>页面副标题</label>
+                <input type="text" class="form-control" name="memberSubtitle" placeholder="如：青春与热血的故事">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">团队架构</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="deptTitle" placeholder="如：团队架构">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="deptSubtitle" placeholder="如：分工明确，协作无间">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                  <label>部门1 - 名称</label>
+                  <input type="text" class="form-control" name="dept1Title" placeholder="如：车架组">
+                </div>
+                <div class="form-group">
+                  <label>部门1 - 职责</label>
+                  <input type="text" class="form-control" name="dept1Desc" placeholder="职责描述">
+                </div>
+                <div class="form-group">
+                  <label>部门2 - 名称</label>
+                  <input type="text" class="form-control" name="dept2Title" placeholder="如：动力组">
+                </div>
+                <div class="form-group">
+                  <label>部门2 - 职责</label>
+                  <input type="text" class="form-control" name="dept2Desc" placeholder="职责描述">
+                </div>
+                <div class="form-group">
+                  <label>部门3 - 名称</label>
+                  <input type="text" class="form-control" name="dept3Title" placeholder="如：悬挂组">
+                </div>
+                <div class="form-group">
+                  <label>部门3 - 职责</label>
+                  <input type="text" class="form-control" name="dept3Desc" placeholder="职责描述">
+                </div>
+                <div class="form-group">
+                  <label>部门4 - 名称</label>
+                  <input type="text" class="form-control" name="dept4Title" placeholder="如：营销组">
+                </div>
+                <div class="form-group">
+                  <label>部门4 - 职责</label>
+                  <input type="text" class="form-control" name="dept4Desc" placeholder="职责描述">
+                </div>
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">精彩瞬间</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="photoTitle" placeholder="如：精彩瞬间">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="photoSubtitle" placeholder="如：记录每一个难忘的时刻">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">团队文化</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="cultureTitle" placeholder="如：团队文化">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="cultureSubtitle" placeholder="如：不只是赛车，更是成长">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                  <label>文化1 - 标题</label>
+                  <input type="text" class="form-control" name="culture1Title" placeholder="如：坚韧不拔">
+                </div>
+                <div class="form-group">
+                  <label>文化1 - 描述</label>
+                  <input type="text" class="form-control" name="culture1Desc" placeholder="描述">
+                </div>
+                <div class="form-group">
+                  <label>文化2 - 标题</label>
+                  <input type="text" class="form-control" name="culture2Title" placeholder="如：乐观向上">
+                </div>
+                <div class="form-group">
+                  <label>文化2 - 描述</label>
+                  <input type="text" class="form-control" name="culture2Desc" placeholder="描述">
+                </div>
+                <div class="form-group">
+                  <label>文化3 - 标题</label>
+                  <input type="text" class="form-control" name="culture3Title" placeholder="如：互帮互助">
+                </div>
+                <div class="form-group">
+                  <label>文化3 - 描述</label>
+                  <input type="text" class="form-control" name="culture3Desc" placeholder="描述">
+                </div>
+              </div>
+              
+              <p class="form-hint">具体队员信息请在「队员管理」页面维护。</p>
+              <button class="btn btn-primary" onclick="savePage('members')">保存内容</button>
+            </div>
+
+            <!-- 赞助商 -->
+            <div class="tabs-pane" data-pane="sponsors">
+              <h3>赞助商</h3>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">页面头部</h4>
+              <div class="form-group">
+                <label>页面标题</label>
+                <input type="text" class="form-control" name="sponsorTitle" placeholder="如：合作伙伴">
+              </div>
+              <div class="form-group">
+                <label>页面副标题</label>
+                <input type="text" class="form-control" name="sponsorSubtitle" placeholder="如：感谢一路相伴">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">合作价值</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="whyTitle" placeholder="如：为什么选择我们">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="whySubtitle" placeholder="如：与我们合作，您将获得">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">合作伙伴</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="partnersTitle" placeholder="如：合作伙伴">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="partnersSubtitle" placeholder="如：感谢以下企业的支持与信任">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">赞助方案</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="plansTitle" placeholder="如：赞助方案">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="plansSubtitle" placeholder="如：多种合作方式，灵活选择">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">CTA</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="ctaTitle" placeholder="如：想要了解更多？">
+              </div>
+              <div class="form-group">
+                <label>描述</label>
+                <input type="text" class="form-control" name="ctaSubtitle" placeholder="如：联系我们，获取定制化的合作方案">
+              </div>
+              
+              <p class="form-hint">具体赞助商信息请在「赞助商管理」页面维护。</p>
+              <button class="btn btn-primary" onclick="savePage('sponsors')">保存内容</button>
+            </div>
+
+            <!-- 招新 -->
+            <div class="tabs-pane" data-pane="recruit">
+              <h3>招新</h3>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">页面头部</h4>
+              <div class="form-group">
+                <label>页面标题</label>
+                <input type="text" class="form-control" name="recruitTitle" placeholder="如：加入我们">
+              </div>
+              <div class="form-group">
+                <label>页面副标题</label>
+                <input type="text" class="form-control" name="recruitSubtitle" placeholder="如：一起追逐赛车梦想">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">为什么加入我们</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="whyTitle" placeholder="如：为什么加入我们">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="whySubtitle" placeholder="如：这里不只是赛车，更是成长的舞台">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">招聘岗位</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="positionsTitle" placeholder="如：招聘岗位">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="positionsSubtitle" placeholder="如：总有一个位置适合你">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">报名流程</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="stepsTitle" placeholder="如：报名流程">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="stepsSubtitle" placeholder="如：简单四步，开启你的赛车之旅">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">车队日常</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="dailyTitle" placeholder="如：车队日常">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="dailySubtitle" placeholder="如：来看看我们的生活">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">CTA</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="ctaTitle" placeholder="如：准备好了吗？">
+              </div>
+              <div class="form-group">
+                <label>描述</label>
+                <input type="text" class="form-control" name="ctaSubtitle" placeholder="如：填写报名表，加入我们的大家庭">
+              </div>
+              
+              <p class="form-hint">具体岗位请在「招新管理」页面维护。</p>
+              <button class="btn btn-primary" onclick="savePage('recruit')">保存内容</button>
+            </div>
+
+            <!-- 联系我们 -->
+            <div class="tabs-pane" data-pane="contact">
+              <h3>联系我们</h3>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">页面头部</h4>
+              <div class="form-group">
+                <label>页面标题</label>
+                <input type="text" class="form-control" name="contactTitle" placeholder="如：联系我们">
+              </div>
+              <div class="form-group">
+                <label>页面副标题</label>
+                <input type="text" class="form-control" name="contactSubtitle" placeholder="如：期待与你相遇">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">联系方式</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="contactInfoTitle" placeholder="如：联系方式">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="contactInfoSubtitle" placeholder="如：多种方式，随时联系">
+              </div>
+              
+              <h4 style="margin: 24px 0 16px; color: #666; font-size: 14px;">留言表单</h4>
+              <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="messageTitle" placeholder="如：给我们留言">
+              </div>
+              <div class="form-group">
+                <label>副标题</label>
+                <input type="text" class="form-control" name="messageSubtitle" placeholder="如：有任何问题或合作意向，欢迎留言">
+              </div>
+              
+              <p class="form-hint">联系电话、邮箱、地址等信息请在「系统设置」中维护。</p>
+              <button class="btn btn-primary" onclick="savePage('contact')">保存内容</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script src="js/page/content.js"></script>
+  <script>
+    checkAuth();
+  </script>
+  
+  <!-- 图片编辑模态框 -->
+  <div class="image-edit-modal" id="imageEditModal">
+    <div class="image-edit-modal-content">
+      <div class="image-edit-modal-header">
+        <div class="image-edit-modal-title">编辑图片</div>
+        <div class="image-edit-modal-close" onclick="closeImageEditModal()">&times;</div>
+      </div>
+      <div style="position: relative;">
+        <div class="image-edit-preview" id="imageEditPreview"></div>
+        <button class="replace-image-btn" onclick="triggerReplaceImage()">更换图片</button>
+      </div>
+      <div class="image-edit-form">
+        <div class="form-group">
+          <label>图片标题</label>
+          <input type="text" id="imageEditTitle" placeholder="请输入图片标题">
+        </div>
+        <div class="form-group">
+          <label>图片描述</label>
+          <textarea id="imageEditDesc" placeholder="请输入图片描述"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Alt 文本</label>
+          <input type="text" id="imageEditAlt" placeholder="请输入图片alt文本">
+        </div>
+        <div class="form-group">
+          <label>位置标签</label>
+          <input type="text" id="imageEditPosition" disabled style="background: #f5f5f5; color: #999;">
+        </div>
+      </div>
+      <div class="image-edit-actions">
+        <button class="btn btn-danger" onclick="deleteCurrentImage()">删除图片</button>
+        <button class="btn btn-primary" onclick="saveImageEdit()">保存修改</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 隐藏的文件输入框 -->
+  <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
+</body>
+</html>

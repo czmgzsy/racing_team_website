@@ -1,0 +1,439 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "type": "app_init",
+      "name": "应用初始化任务",
+      "status": "completed",
+      "subtasks": [
+        "初始化布局导航文件Layout",
+        "初始化主题文件",
+        "初始化占位页面和路由",
+        "本任务以编译与日志检查为界，日志确认无错即提交；运行时核验统一由验收测试任务承担"
+      ],
+      "beginTime": 1785835447334,
+      "endTime": 1785835720135
+    },
+    {
+      "id": 2,
+      "name": "项目架构与基础设施搭建",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "创建完整项目目录结构（public/admin/routes/database/middleware 等）",
+        "编写 package.json，配置 Express、better-sqlite3、multer、express-session 等依赖",
+        "实现 Express 服务入口 server.js，配置静态资源托管路由",
+        "配置 Cookie/Session 中间件与 JSON 解析中间件",
+        "配置 /admin 路径的静态托管与 API 路由挂载",
+        "编写启动脚本与开发脚本，确保 npm install && npm start 可运行",
+        "验证基础服务能正常启动并返回静态页面"
+      ],
+      "requirements": [
+        "1.3",
+        "9.2"
+      ],
+      "write_scope": [
+        "server.js",
+        "package.json",
+        "routes/",
+        "middleware/"
+      ],
+      "read_scope": [],
+      "acceptance": "项目目录结构完整，npm install 成功，npm start 启动后浏览器能访问到首页静态 HTML",
+      "dependencies": [],
+      "beginTime": 1785835720312,
+      "endTime": 1785836814784
+    },
+    {
+      "id": 3,
+      "name": "数据库设计与初始化脚本",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "读取 coding-guide skill，了解数据库操作规范",
+        "封装 SQLite 数据库连接模块 db.js",
+        "编写数据库初始化脚本，创建全部业务表",
+        "插入初始站点设置（默认 logo、联系方式、版权信息）",
+        "插入各页面默认内容数据（首页、车队介绍、赛车、赛事、队员等示例数据）",
+        "插入默认管理员账号 admin/admin123（密码 bcrypt 哈希）",
+        "首次运行自动建表并插入示例数据，后续启动自动跳过"
+      ],
+      "requirements": [
+        "9.1",
+        "10.1",
+        "11.2"
+      ],
+      "write_scope": [
+        "database/db.js",
+        "database/init.js"
+      ],
+      "read_scope": [],
+      "acceptance": "首次启动服务后自动创建所有数据表并插入示例数据，可通过 API 查询到默认管理员和示例内容",
+      "dependencies": [
+        2
+      ],
+      "endTime": 1785836814784
+    },
+    {
+      "id": 4,
+      "name": "后端 API 服务开发",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "读取 coding-guide skill，了解 API 编码规范",
+        "实现管理员登录/登出 API 与鉴权中间件",
+        "实现站点设置与页面内容的读写 API",
+        "实现图片上传 API（multer 处理 multipart，保存到 uploads 目录）",
+        "实现赛车 CRUD API（列表、详情、新增、编辑、删除）",
+        "实现赛事 CRUD API（支持按年份筛选）",
+        "实现队员 CRUD API（支持按状态/届别筛选）",
+        "实现赞助商 CRUD API",
+        "实现招新岗位 CRUD 与报名提交/查询 API",
+        "实现联系留言提交与管理 API",
+        "实现后台数据统计概览 API",
+        "实现修改管理员密码 API",
+        "对所有后台 API 进行鉴权校验，未登录返回 401"
+      ],
+      "requirements": [
+        "1.2",
+        "3.3",
+        "4.3",
+        "5.3",
+        "6.3",
+        "7.3",
+        "8.2",
+        "9.1",
+        "9.2",
+        "9.3",
+        "10.1",
+        "10.2",
+        "10.3",
+        "11.1",
+        "11.2",
+        "11.3"
+      ],
+      "write_scope": [
+        "routes/api.js",
+        "routes/admin.js",
+        "routes/upload.js",
+        "middleware/auth.js"
+      ],
+      "read_scope": [
+        "database/db.js"
+      ],
+      "acceptance": "全部 API 接口可通过 Postman/curl 正常调用，CRUD 操作正确读写 SQLite 数据库，未登录访问后台接口返回 401",
+      "dependencies": [
+        3
+      ],
+      "endTime": 1785836814784
+    },
+    {
+      "id": 5,
+      "name": "前台公共框架与样式系统",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "编写 Tailwind CDN 引入与自定义配置（苹果风格配色、字体）",
+        "实现全站公共导航栏组件（双 logo 并排放置、固定顶部、毛玻璃效果）",
+        "实现导航栏滚动样式变化（背景透明度加深）",
+        "实现移动端汉堡菜单（折叠/展开动画）",
+        "实现全站公共页脚（版权信息、联系方式占位）",
+        "实现滚动淡入动画效果（IntersectionObserver）",
+        "编写公共 CSS 样式文件（苹果风格卡片、按钮、间距规范）",
+        "编写公共 JS 工具函数（API 请求封装、数据渲染辅助、页面初始化）",
+        "所有图片位置添加明确注释标记「此处后续上传替换图片/logo」",
+        "验证导航栏和页脚在所有页面可复用且响应式正常"
+      ],
+      "requirements": [
+        "1.1",
+        "1.3",
+        "1.4",
+        "2.3"
+      ],
+      "write_scope": [
+        "public/css/style.css",
+        "public/js/app.js",
+        "public/images/placeholder.svg"
+      ],
+      "read_scope": [],
+      "acceptance": "导航栏与页脚在各页面正常显示，毛玻璃效果、滚动变化、汉堡菜单、滚动淡入动画均正常工作",
+      "dependencies": [
+        2
+      ],
+      "endTime": 1785836814784
+    },
+    {
+      "id": 6,
+      "name": "前台主页面开发（首页/车队介绍/赛车展示）",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "实现首页：苹果风格大幅 Hero 横幅 + slogan",
+        "实现首页亮点展示区、赛车预览区、快速入口区",
+        "首页数据通过 API 动态加载渲染",
+        "实现车队介绍页：简介、背景、理念、组织架构展示",
+        "车队介绍页内容通过 API 读取动态渲染",
+        "实现赛车展示页：多代赛车卡片式展示 + 参数 + 设计亮点",
+        "赛车数据通过 API 动态加载，支持图集展示",
+        "三个页面均实现响应式适配与滚动淡入动画",
+        "所有图片位使用占位图并标注替换注释",
+        "验证各页面在桌面端和移动端布局正常"
+      ],
+      "requirements": [
+        "1.1",
+        "1.2",
+        "1.4",
+        "2.1",
+        "2.2",
+        "2.3",
+        "3.1",
+        "3.2",
+        "3.3"
+      ],
+      "write_scope": [
+        "public/index.html",
+        "public/about.html",
+        "public/racecar.html",
+        "public/js/page/"
+      ],
+      "read_scope": [
+        "public/css/style.css",
+        "public/js/app.js"
+      ],
+      "acceptance": "三个页面完整可用，数据通过 API 动态加载显示，苹果风格 UI 达标，响应式适配正常",
+      "dependencies": [
+        4,
+        5
+      ],
+      "beginTime": 1785836814951,
+      "endTime": 1785837278329
+    },
+    {
+      "id": 7,
+      "name": "前台内容页面开发（赛事/队员/赞助商）",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "实现赛事历程页：时间线展示 + 成绩 + 图集",
+        "赛事数据通过 API 加载，支持按年份筛选",
+        "实现队员风采页：现任/往届分区，卡片网格展示",
+        "队员数据通过 API 加载，支持按届别/部门筛选",
+        "实现赞助商合作页：logo 展示墙 + 招商说明",
+        "赞助商按级别分组展示，数据通过 API 加载",
+        "三个页面均实现响应式与滚动淡入动画",
+        "所有图片位使用占位图并标注替换注释",
+        "验证赛事图集点击查看大图功能正常"
+      ],
+      "requirements": [
+        "4.1",
+        "4.2",
+        "4.3",
+        "5.1",
+        "5.2",
+        "5.3",
+        "6.1",
+        "6.2",
+        "6.3"
+      ],
+      "write_scope": [
+        "public/competition.html",
+        "public/member.html",
+        "public/sponsor.html",
+        "public/js/page/"
+      ],
+      "read_scope": [
+        "public/css/style.css",
+        "public/js/app.js"
+      ],
+      "acceptance": "三个页面完整可用，数据通过 API 动态加载，筛选/图集交互正常，苹果风格 UI 达标",
+      "dependencies": [
+        4,
+        5
+      ],
+      "beginTime": 1785836814951,
+      "endTime": 1785837278329
+    },
+    {
+      "id": 8,
+      "name": "前台功能页面开发（招新/联系我们）",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "实现招新页面：招新介绍 + 岗位列表 + 报名表单",
+        "岗位数据通过 API 动态加载展示",
+        "报名表单包含姓名、电话、邮箱、意向岗位、个人介绍等字段",
+        "实现表单提交功能，包含前端校验与成功/失败反馈",
+        "实现联系我们页：邮箱、地址、电话、社媒链接展示",
+        "联系页面内容通过 API 读取动态渲染",
+        "实现留言表单（可选），提交后保存到数据库",
+        "两个页面均实现响应式与滚动淡入动画",
+        "验证表单提交后数据正确写入数据库"
+      ],
+      "requirements": [
+        "7.1",
+        "7.2",
+        "7.3",
+        "8.1",
+        "8.2"
+      ],
+      "write_scope": [
+        "public/recruit.html",
+        "public/contact.html",
+        "public/js/page/"
+      ],
+      "read_scope": [
+        "public/css/style.css",
+        "public/js/app.js"
+      ],
+      "acceptance": "招新页和联系页完整可用，表单提交数据正确入库并给出用户反馈，响应式适配正常",
+      "dependencies": [
+        4,
+        5
+      ],
+      "beginTime": 1785836814951,
+      "endTime": 1785837278329
+    },
+    {
+      "id": 9,
+      "name": "管理后台基础与内容管理",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "实现后台登录页：账号密码表单 + 登录验证",
+        "登录成功后跳转后台首页，登录失败显示错误提示",
+        "实现后台整体布局：左侧侧边栏导航 + 右侧内容区",
+        "实现后台数据概览页：展示各项数据统计指标",
+        "实现内容管理页：可视化编辑各页面文本内容",
+        "实现图片上传功能，上传后实时预览并保存 URL",
+        "实现账号设置页：修改管理员密码、退出登录",
+        "编写后台公共样式（admin.css）与公共 JS（admin.js）",
+        "所有后台页面做基础响应式适配",
+        "验证登录态控制有效，未登录自动跳转登录页"
+      ],
+      "requirements": [
+        "9.1",
+        "9.2",
+        "9.3",
+        "10.1",
+        "10.2",
+        "10.3"
+      ],
+      "write_scope": [
+        "admin/login.html",
+        "admin/index.html",
+        "admin/content.html",
+        "admin/settings.html",
+        "admin/css/admin.css",
+        "admin/js/admin.js",
+        "admin/js/page/"
+      ],
+      "read_scope": [
+        "routes/admin.js"
+      ],
+      "acceptance": "后台登录/登出正常，内容编辑和图片上传可保存，修改后前台页面能读取到更新内容",
+      "dependencies": [
+        4
+      ],
+      "beginTime": 1785836814951,
+      "endTime": 1785837278329
+    },
+    {
+      "id": 10,
+      "name": "管理后台数据模块开发",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "实现赛事管理页：列表展示 + 新增/编辑/删除赛事",
+        "赛事管理支持封面图上传与图集管理",
+        "实现队员管理页：列表 + 筛选 + 新增/编辑/删除队员",
+        "队员管理支持头像上传",
+        "实现招新管理页：岗位 CRUD + 报名记录查看与状态更新",
+        "实现赞助商管理页：列表 + 新增/编辑/删除赞助商（含 logo 上传）",
+        "实现留言查看页：留言列表 + 标记已读功能",
+        "所有列表支持基本的增删改查操作与操作反馈",
+        "验证后台操作后数据库数据正确更新，前台对应页面同步变化"
+      ],
+      "requirements": [
+        "11.1",
+        "11.2",
+        "11.3"
+      ],
+      "write_scope": [
+        "admin/competitions.html",
+        "admin/members.html",
+        "admin/recruits.html",
+        "admin/js/page/"
+      ],
+      "read_scope": [
+        "routes/admin.js",
+        "admin/js/admin.js",
+        "admin/css/admin.css"
+      ],
+      "acceptance": "赛事/队员/招新/赞助商/留言均可在后台完成完整 CRUD 操作，操作后前台页面数据实时同步更新",
+      "dependencies": [
+        9
+      ],
+      "endTime": 1785837278329
+    },
+    {
+      "id": 11,
+      "name": "部署文档与项目配置收尾",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "编写《部署使用说明.md》：本地运行步骤说明",
+        "编写图片素材上传替换操作指南",
+        "编写 Vercel 平台部署步骤说明",
+        "编写 Render 平台部署步骤说明",
+        "补充 README.md 项目简介与快速启动说明",
+        "检查所有图片占位注释是否完整清晰",
+        "检查全部页面导航链接是否正确互通",
+        "整体代码中文注释检查与完善",
+        "验证 npm install && npm start 一键启动完整项目"
+      ],
+      "requirements": [],
+      "write_scope": [
+        "README.md",
+        "部署使用说明.md"
+      ],
+      "read_scope": [
+        "server.js",
+        "package.json"
+      ],
+      "acceptance": "部署说明文档完整可用，按文档操作可在本地和 Vercel/Render 上成功部署运行",
+      "dependencies": [
+        6,
+        7,
+        8,
+        10
+      ],
+      "endTime": 1785837278329
+    },
+    {
+      "id": 12,
+      "name": "验收测试",
+      "type": "normal",
+      "status": "completed",
+      "subtasks": [
+        "读取 testing-guide skill，了解验收测试流程",
+        "架构与入口检查：确认项目结构完整、入口可访问",
+        "核心验收目标1：前台8个页面完整可访问，苹果风格 UI 达标，导航栏与页脚正常",
+        "核心验收目标2：管理后台登录与内容编辑功能完整，修改后前台实时同步",
+        "核心验收目标3：赛车/赛事/队员/招新数据的后台 CRUD 与前台展示闭环",
+        "非核心降级范围：图片素材后续替换、生产环境性能优化、高级动画细节"
+      ],
+      "requirements": [],
+      "write_scope": [],
+      "read_scope": [
+        "README.md",
+        "部署使用说明.md"
+      ],
+      "acceptance": "前台页面视觉与交互符合苹果官网风格，后台管理功能完整可用，数据从后台到前台的完整链路验证通过",
+      "dependencies": [
+        11
+      ],
+      "beginTime": 1785837278494,
+      "endTime": 1785838529981
+    }
+  ]
+}

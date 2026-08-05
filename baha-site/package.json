@@ -1,0 +1,31 @@
+{
+  "name": "baha-racing-team-website",
+  "version": "1.0.0",
+  "description": "合肥经济技术职业学院巴哈车队官网 - Express + SQLite + 原生JS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "baja",
+    "racing",
+    "team",
+    "express",
+    "website"
+  ],
+  "author": "合肥经济技术职业学院巴哈车队",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "better-sqlite3": "^11.3.0",
+    "express-session": "^1.18.0",
+    "bcryptjs": "^2.4.3",
+    "multer": "^1.4.5-lts.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

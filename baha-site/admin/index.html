@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理后台 - 巴哈车队官网</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- 侧边栏 -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo">管理后台</div>
+      <nav class="admin-nav">
+        <a href="index.html" class="active">数据概览</a>
+        <a href="content.html">内容管理</a>
+        <a href="images.html">图片管理</a>
+        <a href="competitions.html">赛事管理</a>
+        <a href="members.html">队员管理</a>
+        <a href="recruits.html">招新管理</a>
+        <a href="sponsors.html">赞助商管理</a>
+        <a href="messages.html">留言管理</a>
+        <a href="settings.html">账号设置</a>
+      </nav>
+      <div class="admin-footer">
+        <a href="#" onclick="logout()">退出登录</a>
+      </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <h1>数据概览</h1>
+        <div class="admin-user">管理员</div>
+      </header>
+      <div class="admin-content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="stat-racecar">--</div>
+            <div class="stat-label">赛车数量</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-competition">--</div>
+            <div class="stat-label">赛事记录</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-member">--</div>
+            <div class="stat-label">队员人数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-sponsor">--</div>
+            <div class="stat-label">合作单位</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-application">--</div>
+            <div class="stat-label">报名申请</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-message">--</div>
+            <div class="stat-label">留言消息</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script>
+    // 检查登录状态
+    checkAuth();
+    // 加载统计数据
+    loadStats();
+  </script>
+</body>
+</html>
