@@ -1,16 +1,16 @@
 /**
- * SQLite 数据库连接模块
- * 使用 better-sqlite3 同步操作，简单高效
+ * Turso 云端数据库连接模块
+ * 使用 @libsql/better-sqlite3 兼容驱动，API 与 better-sqlite3 完全一致
  */
-const Database = require('better-sqlite3');
-const path = require('path');
+const Database = require('@libsql/better-sqlite3');
 
-// 数据库文件路径
-const dbPath = path.join(__dirname, 'baha.db');
-const db = new Database(dbPath);
+// 从环境变量读取 Turso 数据库配置
+const db = new Database({
+  url: process.env.DATABASE_URL,
+  authToken: process.env.DATABASE_TOKEN,
+});
 
-// 开启 WAL 模式提升性能
-db.pragma('journal_mode = WAL');
+// 开启外键约束
 db.pragma('foreign_keys = ON');
 
 module.exports = db;
