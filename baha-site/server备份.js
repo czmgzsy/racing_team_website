@@ -37,8 +37,7 @@ app.use(cookieParser());
 
 // Session 配置
 app.use(session({
-  // secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
-  secret: process.env.SESSION_SECRET || 'baha_racing_website_secure_key_2026',
+  secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -94,7 +93,7 @@ function startServer() {
     process.exit(1);
   }
 
-  app.listen(PORT, '0.0.0.0',() => {
+  app.listen(PORT, () => {
     console.log('========================================');
     console.log('  巴哈车队官网服务已启动');
     console.log('  前台地址: http://localhost:' + PORT);
