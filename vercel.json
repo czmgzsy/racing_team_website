@@ -1,0 +1,15 @@
+{
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "functions": {
+    "baha-site/server.js": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/baha-site/server.js"
+    }
+  ]
+}
